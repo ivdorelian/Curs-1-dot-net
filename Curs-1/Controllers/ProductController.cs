@@ -22,6 +22,11 @@ namespace Curs_1.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Returns products with a minimum price.
+        /// </summary>
+        /// <param name="minPrice">the minimum price.</param>
+        /// <returns>A list of products with price >= minPrice</returns>
         [HttpGet]
         [Route("filter/{minPrice}")]
         public ActionResult<IEnumerable<Product>> FilterProducts(int minPrice)
