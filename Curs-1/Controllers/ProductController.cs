@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Curs_1.Data;
 using Curs_1.Models;
 using Curs_1.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace Curs_1.Controllers
 {
@@ -16,10 +17,12 @@ namespace Curs_1.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ProductController> _logger;
 
-        public ProductController(ApplicationDbContext context)
+        public ProductController(ApplicationDbContext context, ILogger<ProductController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         /// <summary>
@@ -32,7 +35,7 @@ namespace Curs_1.Controllers
         public ActionResult<IEnumerable<Product>> FilterProducts(int minPrice)
         {
             var query = _context.Products.Where(p => p.Price >= minPrice);
-            Console.WriteLine(query.ToQueryString());
+            _logger.LogInformation(query.ToQueryString());
             return query.ToList();
         }
 
@@ -46,6 +49,32 @@ namespace Curs_1.Controllers
             }
 
             return await _context.Products.Where(p => p.Price >= minPrice).ToListAsync();
+        }
+
+        [HttpGet("{id}/Comments")]
+        public ActionResult<IEnumerable<Object>> GetCommentsForProduct(int id)
+        {
+            var query = _context.Comments.Where(c => c.Product.Id == id).Include(c => c.Product).Select(c => new
+            {
+                Product = c.Product.Name,
+                Comment = c.Content
+            });
+            _logger.LogInformation(query.ToQueryString());
+            return query.ToList();
+        }
+
+        [HttpPost("{id}/Comments")]
+        public IActionResult PostCommentForProduct(int id, Comment comment)
+        {
+            comment.Product = _context.Products.Find(id);
+            if (comment.Product == null)
+            {
+                return NotFound();
+            }
+            _context.Comments.Add(comment);
+            _context.SaveChanges();
+
+            return Ok();
         }
 
         // GET: api/Product/5
