@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 
 namespace Curs_1.Models
 {
+    public enum ProductType {
+        Consumable,
+        Heavy,
+        Other
+    };
+
     public class Product
     {
         public int Id { get; set; }
@@ -16,6 +23,8 @@ namespace Curs_1.Models
 
         [Range(10, Double.MaxValue)]
         public double Price { get; set; }
+
+        public ProductType ProductType { get; set; }
 
         public List<Comment> Comments { get; set; }
     }
