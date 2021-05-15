@@ -9,6 +9,7 @@ using Curs_1.Data;
 using Curs_1.Models;
 using Curs_1.ViewModels;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
 
 namespace Curs_1.Controllers
 {
@@ -18,11 +19,13 @@ namespace Curs_1.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<ProductController> _logger;
+        private readonly IMapper _mapper;
 
-        public ProductController(ApplicationDbContext context, ILogger<ProductController> logger)
+        public ProductController(ApplicationDbContext context, ILogger<ProductController> logger, IMapper mapper)
         {
             _context = context;
             _logger = logger;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -84,8 +87,12 @@ namespace Curs_1.Controllers
                 })
             });
 
+            var query_v3 = _context.Products.Where(p => p.Id == id).Include(p => p.Comments).Select(p => _mapper.Map<ProductWithCommentsViewModel>(p));
+
             _logger.LogInformation(query_v1.ToQueryString());
-            return query_v2.ToList();
+            _logger.LogInformation(query_v2.ToQueryString());
+            _logger.LogInformation(query_v3.ToQueryString());
+            return query_v3.ToList();
         }
 
         [HttpPost("{id}/Comments")]
@@ -107,20 +114,12 @@ namespace Curs_1.Controllers
         public async Task<ActionResult<ProductViewModel>> GetProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
-
-            // look at automapper
-            var productViewModel = new ProductViewModel
-            {
-                Description = product.Description,
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price
-            };
-
             if (product == null)
             {
                 return NotFound();
             }
+
+            var productViewModel = _mapper.Map<ProductViewModel>(product);
 
             return productViewModel;
         }
