@@ -13,6 +13,7 @@ namespace Curs_1.Data
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
         public DbSet<Product> Products { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         public ApplicationDbContext(
             DbContextOptions options,

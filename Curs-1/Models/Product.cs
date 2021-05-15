@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Curs_1.Models
@@ -15,5 +16,7 @@ namespace Curs_1.Models
 
         [Range(10, Double.MaxValue)]
         public double Price { get; set; }
+
+        public List<Comment> Comments { get; set; }
     }
 }
