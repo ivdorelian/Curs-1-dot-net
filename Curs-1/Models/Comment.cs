@@ -7,6 +7,8 @@ namespace Curs_1.Models
         public string Content { get; set; }
         public DateTime DateTime { get; set; }
         public int Stars { get; set; }
+
+        public int ProductId { get; set; }
         public Product Product { get; set; }
     }
 }

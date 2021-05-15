@@ -89,6 +89,11 @@ namespace Curs_1.Controllers
 
             var query_v3 = _context.Products.Where(p => p.Id == id).Include(p => p.Comments).Select(p => _mapper.Map<ProductWithCommentsViewModel>(p));
 
+            var queryForCommentProductId = _context.Comments;
+
+            _logger.LogInformation(queryForCommentProductId.ToList()[0].ProductId.ToString());
+            // _logger.LogInformation(queryForCommentProductId.ToList()[0].Product.ToString()); crapa, ceea ce e si normal pentru ca nu am pus Include
+
             _logger.LogInformation(query_v1.ToQueryString());
             _logger.LogInformation(query_v2.ToQueryString());
             _logger.LogInformation(query_v3.ToQueryString());
