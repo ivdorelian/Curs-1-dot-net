@@ -98,13 +98,23 @@ namespace Curs_1.Controllers
         [HttpPost("{id}/Comments")]
         public IActionResult PostCommentForProduct(int id, Comment comment)
         {
-            comment.Product = _context.Products.Find(id);
-            if (comment.Product == null)
+            var product = _context.Products.Where(p => p.Id == id).Include(p => p.Comments).FirstOrDefault();
+            if (product == null)
             {
                 return NotFound();
             }
-            _context.Comments.Add(comment);
+
+            product.Comments.Add(comment);
+            _context.Entry(product).State = EntityState.Modified;
             _context.SaveChanges();
+
+            //comment.Product = _context.Products.Find(id);
+            //if (comment.Product == null)
+            //{
+            //    return NotFound();
+            //}
+            //_context.Comments.Add(comment);
+            //_context.SaveChanges();
 
             return Ok();
         }
