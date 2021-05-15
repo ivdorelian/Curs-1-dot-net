@@ -9,15 +9,4 @@ import { Product } from './product.model';
 })
 export class ProductsComponent {
 
-  public products: Product[];
-
-  constructor(http: HttpClient, @Inject('API_URL') apiUrl: string) {
-    http.get<Product[]>(apiUrl + 'product').subscribe(result => {
-      this.products = result;
-    }, error => console.error(error));
-  }
-
-  ngOnInit() {
-  }
-
 }
