@@ -52,15 +52,40 @@ namespace Curs_1.Controllers
         }
 
         [HttpGet("{id}/Comments")]
-        public ActionResult<IEnumerable<Object>> GetCommentsForProduct(int id)
+        public ActionResult<IEnumerable<ProductWithCommentsViewModel>> GetCommentsForProduct(int id)
         {
-            var query = _context.Comments.Where(c => c.Product.Id == id).Include(c => c.Product).Select(c => new
+            var query_v1 = _context.Comments.Where(c => c.Product.Id == id).Include(c => c.Product).Select(c => new ProductWithCommentsViewModel
             {
-                Product = c.Product.Name,
-                Comment = c.Content
+                Id = c.Product.Id,
+                Name = c.Product.Name,
+                Description = c.Product.Description,
+                Price = c.Product.Price,
+                Comments = c.Product.Comments.Select(pc => new CommentViewModel
+                {
+                    Id = pc.Id,
+                    Content = pc.Content,
+                    DateTime = pc.DateTime,
+                    Stars = pc.Stars
+                })
             });
-            _logger.LogInformation(query.ToQueryString());
-            return query.ToList();
+
+            var query_v2 = _context.Products.Where(p => p.Id == id).Include(p => p.Comments).Select(p => new ProductWithCommentsViewModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Price = p.Price,
+                Comments = p.Comments.Select(pc => new CommentViewModel
+                {
+                    Id = pc.Id,
+                    Content = pc.Content,
+                    DateTime = pc.DateTime,
+                    Stars = pc.Stars
+                })
+            });
+
+            _logger.LogInformation(query_v1.ToQueryString());
+            return query_v2.ToList();
         }
 
         [HttpPost("{id}/Comments")]
