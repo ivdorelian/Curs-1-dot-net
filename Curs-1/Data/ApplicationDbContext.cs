@@ -21,5 +21,15 @@ namespace Curs_1.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Product>()
+                .HasIndex(p => p.Name)
+                .IsUnique()
+                .HasFilter(null);
+        }
     }
 }
