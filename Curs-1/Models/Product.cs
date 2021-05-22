@@ -27,5 +27,7 @@ namespace Curs_1.Models
         public ProductType ProductType { get; set; }
 
         public List<Comment> Comments { get; set; }
+
+        public List<Order> Orders { get; set; }
     }
 }

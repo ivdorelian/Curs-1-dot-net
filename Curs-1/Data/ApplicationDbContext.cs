@@ -15,6 +15,7 @@ namespace Curs_1.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         public ApplicationDbContext(
             DbContextOptions options,

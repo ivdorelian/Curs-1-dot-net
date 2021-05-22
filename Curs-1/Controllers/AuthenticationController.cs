@@ -80,8 +80,9 @@ namespace Curs_1.Controllers
             var user = await _userManager.FindByEmailAsync(loginRequest.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, loginRequest.Password))
             {
-                var claim = new[] {
+                var claims = new[] {
                     new Claim(JwtRegisteredClaimNames.Sub, user.UserName)
+                    //new Claim(JwtRegisteredClaimNames.na)
                 };
                 var signinKey = new SymmetricSecurityKey(
                   Encoding.UTF8.GetBytes(_configuration["Jwt:SigningKey"]));
@@ -92,7 +93,8 @@ namespace Curs_1.Controllers
                   issuer: _configuration["Jwt:Site"],
                   audience: _configuration["Jwt:Site"],
                   expires: DateTime.UtcNow.AddMinutes(expiryInMinutes),
-                  signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256)
+                  signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256),
+                  claims: claims
                 );
 
                 return Ok(
