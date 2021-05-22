@@ -15,13 +15,13 @@ namespace Curs_1.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        //[Required]
         public string Name { get; set; }
 
-        [MinLength(10)]
+        //[MinLength(10)]
         public string Description { get; set; }
 
-        [Range(10, Double.MaxValue)]
+        //[Range(10, Double.MaxValue)]
         public double Price { get; set; }
 
         public ProductType ProductType { get; set; }

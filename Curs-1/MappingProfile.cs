@@ -9,7 +9,7 @@ namespace Curs_1
     {
         public MappingProfile()
         {
-            CreateMap<Product, ProductViewModel>();//.ReverseMap();
+            CreateMap<Product, ProductViewModel>().ReverseMap();
             CreateMap<Comment, CommentViewModel>();
             CreateMap<Product, ProductWithCommentsViewModel>();
         }

@@ -55,9 +55,9 @@ namespace Curs_1.Controllers
         }
 
         [HttpGet("{id}/Comments")]
-        public ActionResult<IEnumerable<ProductWithCommentsViewModel>> GetCommentsForProduct(int id)
+        public ActionResult<ProductWithCommentsViewModel> GetCommentsForProduct(int id)
         {
-            var query_v1 = _context.Comments.Where(c => c.Product.Id == id).Include(c => c.Product).Select(c => new ProductWithCommentsViewModel
+            var query_v1 = _context.Comments.Where(c => c.Product.Id == id).Select(c => new ProductWithCommentsViewModel
             {
                 Id = c.Product.Id,
                 Name = c.Product.Name,
@@ -87,17 +87,18 @@ namespace Curs_1.Controllers
                 })
             });
 
-            var query_v3 = _context.Products.Where(p => p.Id == id).Include(p => p.Comments).Select(p => _mapper.Map<ProductWithCommentsViewModel>(p));
+            //var query_v3 = _context.Products.Where(p => p.Id == id).Include(p => p.Comments).Select(p => _mapper.Map<ProductWithCommentsViewModel>(p));
+            var query_v3 = _context.Products.Where(p => p.Id == id).Select(p => _mapper.Map<ProductWithCommentsViewModel>(p));
 
             var queryForCommentProductId = _context.Comments;
 
             _logger.LogInformation(queryForCommentProductId.ToList()[0].ProductId.ToString());
-            // _logger.LogInformation(queryForCommentProductId.ToList()[0].Product.ToString()); crapa, ceea ce e si normal pentru ca nu am pus Include
+            // _logger.LogInformation(queryForCommentProductId.ToList()[0].Product.ToString()); //crapa, ceea ce e si normal pentru ca nu am pus Include
 
             _logger.LogInformation(query_v1.ToQueryString());
             _logger.LogInformation(query_v2.ToQueryString());
             _logger.LogInformation(query_v3.ToQueryString());
-            return query_v3.ToList();
+            return query_v3.ToList()[0];
         }
 
         [HttpPost("{id}/Comments")]
@@ -173,8 +174,9 @@ namespace Curs_1.Controllers
         // POST: api/Product
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<ProductViewModel>> PostProduct(ProductViewModel productRequest)
         {
+            Product product = _mapper.Map<Product>(productRequest);
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 

@@ -18,6 +18,10 @@ using System.IO;
 using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using FluentValidation.AspNetCore;
+using Curs_1.ViewModels;
+using FluentValidation;
+using Curs_1.Validators;
 
 namespace Curs_1
 {
@@ -64,6 +68,7 @@ namespace Curs_1
                     };
                 });
             services.AddControllersWithViews()
+                .AddFluentValidation()
                 .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
             services.AddRazorPages();
             // In production, the Angular files will be served from this directory
@@ -100,7 +105,7 @@ namespace Curs_1
                 c.IncludeXmlComments(xmlPath);
             });
 
-
+            services.AddTransient<IValidator<ProductViewModel>, ProductValidator>(); // sau add scoped
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
