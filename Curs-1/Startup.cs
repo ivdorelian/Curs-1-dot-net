@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -22,6 +21,8 @@ using FluentValidation.AspNetCore;
 using Curs_1.ViewModels;
 using FluentValidation;
 using Curs_1.Validators;
+using Curs_1.Services;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Curs_1
 {
@@ -106,6 +107,7 @@ namespace Curs_1
             });
 
             services.AddTransient<IValidator<ProductViewModel>, ProductValidator>(); // sau add scoped
+            services.AddTransient<IAuthManagementService, AuthManagementService>(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
