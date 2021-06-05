@@ -51,7 +51,11 @@ namespace Curs_1.Controllers
                 return await _context.Products.ToListAsync();
             }
 
-            return await _context.Products.Where(p => p.Price >= minPrice).ToListAsync();
+            //return await _context.Products.Where(p => p.Price >= minPrice).ToListAsync();
+            var linq = from p in _context.Products
+                       where p.Price >= minPrice
+                       select p;
+            return await linq.ToListAsync();
         }
 
         [HttpGet("{id}/Comments")]
