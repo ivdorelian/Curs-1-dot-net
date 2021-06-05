@@ -16,6 +16,7 @@ namespace Curs_1.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Order> Orders { get; set; }
+        //public DbSet<YourReportClass> {get;set;}
 
         public ApplicationDbContext(
             DbContextOptions options,
@@ -26,6 +27,8 @@ namespace Curs_1.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+    //        modelBuilder.Entity<YourReportClass>.HasNoKey();
 
             modelBuilder.Entity<Product>()
                 .HasIndex(p => p.Name)

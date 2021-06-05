@@ -46,6 +46,8 @@ namespace Curs_1.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts(int? minPrice)
         {
+            //_context.Products.FromSqlRaw()
+
             if (minPrice == null)
             {
                 return await _context.Products.ToListAsync();
