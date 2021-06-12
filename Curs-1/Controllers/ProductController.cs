@@ -44,20 +44,39 @@ namespace Curs_1.Controllers
 
         // GET: api/Product
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts(int? minPrice)
+        public async Task<ActionResult<PaginatedResultSet<Product>>> GetProducts(int? minPrice, int? page=1, int? perPage=20)
         {
             //_context.Products.FromSqlRaw()
 
-            if (minPrice == null)
+            if (page == null || page < 1)
             {
-                return await _context.Products.ToListAsync();
+                page = 1;
+            }
+            if (perPage == null || perPage > 100)
+            {
+                perPage = 20;
             }
 
-            //return await _context.Products.Where(p => p.Price >= minPrice).ToListAsync();
-            var linq = from p in _context.Products
-                       where p.Price >= minPrice
-                       select p;
-            return await linq.ToListAsync();
+            if (minPrice == null)
+            {
+                minPrice = int.MinValue;
+            }
+
+            var entities = await _context.Products
+                .Where(p => p.Price >= minPrice)
+                .OrderBy(p => p.Id)
+                .Skip((page.Value - 1) * perPage.Value)
+                .Take(perPage.Value)
+                .ToListAsync();
+
+            int count = await _context.Products.Where(p => p.Price >= minPrice).CountAsync();
+            var resultSet = new PaginatedResultSet<Product>(entities, page.Value, count, perPage.Value);
+            return resultSet;
+
+            //var linq = from p in _context.Products
+            //           where p.Price >= minPrice
+            //           select p;
+            // return await linq.ToListAsync();
         }
 
         [HttpGet("{id}/Comments")]
