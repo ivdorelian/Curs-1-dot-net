@@ -4,3 +4,12 @@ export class Product {
   description: string;
   price: number;
 }
+
+export class PaginatedProducts {
+  firstPages: number[];
+  lastPages: number[];
+  previousPages: number[];
+  nextPages: number[];
+  totalEntities: number;
+  entities: Product[];
+}

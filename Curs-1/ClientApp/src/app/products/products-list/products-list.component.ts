@@ -1,7 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Product } from '../product.model';
+import { Product, PaginatedProducts } from '../product.model';
 import { ProductsService } from '../products.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-list-products',
@@ -10,14 +11,27 @@ import { ProductsService } from '../products.service';
 })
 export class ProductsListComponent {
 
-  public products: Product[];
+  public products: PaginatedProducts;
+  currentPage: number;
 
   constructor(private productsService: ProductsService) {
 
   }
 
-  getProducts() {
-    this.productsService.getProducts().subscribe(p => this.products = p);
+  //constructor(
+  //  private route: ActivatedRoute
+  //) { }
+
+  //ngOnInit() {
+  //  const firstParam: string = this.route.snapshot.queryParamMap.get('page');
+  //  const secondParam: string = this.route.snapshot.queryParamMap.get('perPage');
+  //}
+
+  getProducts(page: number = 1) {
+    //console.log(event);
+    //event.preventDefault();
+    this.currentPage = page;
+    this.productsService.getProducts(page).subscribe(p => this.products = p);
   }
 
   ngOnInit() {
